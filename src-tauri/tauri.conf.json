@@ -12,7 +12,11 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": false,
+      "window": {
+        "close": true,
+        "create": true
+      }
     },
     "bundle": {
       "active": true,
@@ -57,11 +61,11 @@
       {
         "title": "Achronaz",
         "fullscreen": false,
-        "height": 60,
-        "width": 250,
+        "height": 80,
+        "width": 280,
         "transparent": true,
         "decorations": false,
-        "resizable": true,
+        "resizable": false,
         "alwaysOnTop": true
       }
     ]
