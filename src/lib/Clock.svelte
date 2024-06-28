@@ -1,10 +1,8 @@
 <script lang="ts">
-  // import { WebviewWindow } from '@tauri-apps/api/window';
   import { onMount } from 'svelte';
   let appWindow: any
   let WebviewWindow: any;
   if (typeof window !== 'undefined') {
-    // Only import @tauri-apps/api/window in the browser context
     import('@tauri-apps/api/window').then((module) => {
       appWindow = module.appWindow;
       WebviewWindow = module.WebviewWindow;
@@ -35,11 +33,6 @@
     return () => clearInterval(interval);
   });
 
-  // function setAlarm() {
-  //   alarmActive = true;
-  //   alarmTriggered = false;
-  // }
-
   function closeApp() {
     if (configWindow) {
       configWindow.close();
@@ -66,23 +59,30 @@
 </script>
 
 <div class="clock-container" role="application" on:mouseenter={() => clockOpen=true} on:mouseleave={() => clockOpen=false}>
-  <button class="close-app close-app bg-gray-700 text-white rounded p-2 m-2" on:click={()=> closeApp()}>close</button>
+  <!-- <button class="close-app close-app bg-gray-700 text-white rounded p-2 m-2" on:click={()=> closeApp()}>close</button> -->
+  <div class="close-app">
+    <button class="btn btn-circle btn-outline btn-xs" on:click={()=> closeApp()}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
   <div class="clock">
     {time.toLocaleTimeString()}
   </div>
-  <button class="open-configuration" on:click={()=> openConfigWindow()}>conf</button>
+  <button class="open-configuration btn btn-info btn-active btn-sm" on:click={()=> openConfigWindow()}>Configuration</button>
 
 </div>
 
-<!-- <div>
-  <label>
-    Alarm Time (HH:MM:SS):
-    <input type="text" bind:value={alarmTime} />
-  </label>
-  <button on:click={setAlarm}>Set Alarm</button>
-</div> -->
-
-<!-- <div style='--clock-background:{alarmTriggered ? 'red' : 'rgba(255, 255, 255, 0.8)'};'></div> -->
 <div style='--clock-background: red'></div>
 
 <style>
@@ -93,6 +93,8 @@
     transform: translate(50%, -50%);
     opacity: 0;
     transition: all 1.5s ease;
+    height: 20px;
+    width: 20px;
   }
   .clock-container:hover .close-app {
     opacity: 1;
@@ -123,9 +125,13 @@
     opacity: 0;
     transition: all 1.5s ease;
     height: 0;
+    min-height: 0;
+    color: white;
   }
   .clock-container:hover .open-configuration{
     opacity: 1;
     height: auto;
+    min-height: 2rem;
+
   }
 </style>
