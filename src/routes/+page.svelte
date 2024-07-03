@@ -1,9 +1,50 @@
 <script lang="ts">
   import Clock from '$lib/Clock.svelte';
-  import type { SvelteComponent } from 'svelte';
+  import { onMount } from 'svelte';
+  import { configStore } from '../stores/configStore';
 
+  let appWindow: any
+  let WebviewWindow: any;
 
-  let clock: SvelteComponent;
+  if (typeof window !== 'undefined') {
+    import('@tauri-apps/api/window').then((module) => {
+      appWindow = module.appWindow;
+      WebviewWindow = module.WebviewWindow;
+    });
+  }
+  let configWindow: typeof WebviewWindow | null = null;
+  onMount(() => {
+    console.log('config dfrom store: ', $configStore)
+    appWindow?.listen('close-requested', () => {
+      if (configWindow) {
+        configWindow.close();
+      }
+      appWindow?.close();
+    });
+  });
+
+  function closeApp() {
+    if (configWindow) {
+      configWindow.close();
+    }
+    appWindow?.close();
+  }
+
+  function openConfigWindow() {
+    configWindow = new WebviewWindow('config', {
+      url: '/config',
+      width: 600,
+      height: 400,
+      title: 'Configuration',
+      resizable: true,
+      decorations: true,
+    });
+
+    configWindow.once('close-requested', () => {
+      configWindow.close();
+    });
+  }
+
 </script>
 
 <style>
@@ -16,5 +57,13 @@
   }
 </style>
 
-<Clock bind:this={clock} />
+<Clock
+  config={$configStore}
+  openConfigWindow={openConfigWindow}
+  closeApp={closeApp}
+/>
+<!-- <Clock
+  openConfigWindow={openConfigWindow}
+  closeApp={closeApp}
+/> -->
 

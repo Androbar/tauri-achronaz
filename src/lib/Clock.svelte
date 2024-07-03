@@ -1,89 +1,79 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  let appWindow: any
-  let WebviewWindow: any;
-  if (typeof window !== 'undefined') {
-    import('@tauri-apps/api/window').then((module) => {
-      appWindow = module.appWindow;
-      WebviewWindow = module.WebviewWindow;
-    });
-  }
-  let configWindow: typeof WebviewWindow | null = null;
-  let time: Date = new Date();
-  let alarmTime: string = '';
-  let alarmActive: boolean = false;
-  let alarmTriggered: boolean = false;
+	import type { ConfigStore } from '../stores/types';
+
+  export let openConfigWindow: () => void
+  export let closeApp: () => void
+  export let config: ConfigStore;
+  
   let clockOpen: boolean = false;
+  let time: Date = new Date();
+  let alarmTriggered: boolean = false;
+  // let config = {
+  //   backgroundColor: '#ffffff99',
+  //   backgroundHoverColor: '#ffffffff',
+  //   fontColor: '#000',
+  //   fontHoverColor: '#000',
+  //   alarmBgColor: 'red',
+  //   alarmFontColor: '#fff',
+  //   clockFormat: 'HH:MM:SS AM/PM',
+  //   dateFormat: 'DD/MM/YYYY',
+  //   showDate: false,
+  //   alarmTime: null
+  // }
 
   onMount(() => {
     const interval = setInterval(() => {
       time = new Date();
-      if (alarmActive && time.toLocaleTimeString() === alarmTime) {
+      if (config.alarmTime && time.toLocaleTimeString() === config.alarmTime) {
         alarmTriggered = true;
       }
     }, 1000);
-
-    appWindow?.listen('close-requested', () => {
-      if (configWindow) {
-        configWindow.close();
-      }
-      appWindow?.close();
-    });
-
     return () => clearInterval(interval);
   });
-
-  function closeApp() {
-    if (configWindow) {
-      configWindow.close();
-    }
-    appWindow?.close();
-    console.log('bop')
-  }
-
-  function openConfigWindow() {
-    console.log('bep')
-    configWindow = new WebviewWindow('config', {
-      url: '/config',
-      width: 600,
-      height: 400,
-      title: 'Configuration',
-      resizable: true,
-      decorations: true,
-    });
-
-    configWindow.once('close-requested', () => {
-      configWindow.close();
-    });
-  }
 </script>
 
-<div class="clock-container" role="application" on:mouseenter={() => clockOpen=true} on:mouseleave={() => clockOpen=false}>
-  <!-- <button class="close-app close-app bg-gray-700 text-white rounded p-2 m-2" on:click={()=> closeApp()}>close</button> -->
-  <div class="close-app">
-    <button class="btn btn-circle btn-outline btn-xs" on:click={()=> closeApp()}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
-  </div>
-  <div class="clock">
-    {time.toLocaleTimeString()}
-  </div>
-  <button class="open-configuration btn btn-info btn-active btn-sm" on:click={()=> openConfigWindow()}>Configuration</button>
+<div style="--clock-background: {config.backgroundColor};
+            --clock-background-hover: {config.backgroundHoverColor};
+            --clock-font-color: {config.fontColor};
+            --clock-font-color-hover: {config.fontColor};
+            --alarm-background: {config.alarmBgColor};
+            --alarm-font-color: {config.alarmFontColor}"
+>
+  <div
+    class="clock-container"
+    role="application"
+    on:mouseenter={() => {
+      clockOpen=true
+      console.log(config)
+    }}
+    on:mouseleave={() => clockOpen=false}
+    style={`background: ${config.backgroundColor}`}
+  >
+    <div class="close-app">
+      <button class="btn btn-circle btn-outline btn-xs" on:click={()=> closeApp()}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="clock">
+      {time.toLocaleTimeString()}
+    </div>
+    <button class="open-configuration btn btn-info btn-active btn-sm" on:click={()=> openConfigWindow()}>Configuration</button>
 
 </div>
 
-<div style='--clock-background: red'></div>
+</div>
 
 <style>
   .close-app {
@@ -107,7 +97,6 @@
     position: relative;
     font-size: 24px;
     font-weight: bold;
-    background: rgba(255, 255, 255, 0.6);
     padding: 10px;
     border-radius: 20px;
     z-index: 10000;
@@ -119,7 +108,7 @@
     cursor: default;
     width: 200px;
     height: 70px;
-    background: rgba(255, 255, 255, 1);
+    background: var(--clock-background-hover);
   }
   .open-configuration{
     opacity: 0;

@@ -1,5 +1,9 @@
 <script>
   import "../app.css";
-</script>
+  import { browser } from '$app/environment';
 
+  if (browser) {
+    import('../stores/broadcastChannel');
+  }
+</script>
 <slot />
