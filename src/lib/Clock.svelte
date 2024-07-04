@@ -4,25 +4,14 @@
 
   export let openConfigWindow: () => void
   export let closeApp: () => void
-  export let config: ConfigStore;
+  export let config: ConfigStore | null;
   
   let clockOpen: boolean = false;
   let time: Date = new Date();
   let alarmTriggered: boolean = false;
-  // let config = {
-  //   backgroundColor: '#ffffff99',
-  //   backgroundHoverColor: '#ffffffff',
-  //   fontColor: '#000',
-  //   fontHoverColor: '#000',
-  //   alarmBgColor: 'red',
-  //   alarmFontColor: '#fff',
-  //   clockFormat: 'HH:MM:SS AM/PM',
-  //   dateFormat: 'DD/MM/YYYY',
-  //   showDate: false,
-  //   alarmTime: null
-  // }
 
   onMount(() => {
+    if(!config) return
     const interval = setInterval(() => {
       time = new Date();
       if (config.alarmTime && time.toLocaleTimeString() === config.alarmTime) {
@@ -33,12 +22,12 @@
   });
 </script>
 
-<div style="--clock-background: {config.backgroundColor};
-            --clock-background-hover: {config.backgroundHoverColor};
-            --clock-font-color: {config.fontColor};
-            --clock-font-color-hover: {config.fontColor};
-            --alarm-background: {config.alarmBgColor};
-            --alarm-font-color: {config.alarmFontColor}"
+<div style="--clock-background: {config?.backgroundColor};
+            --clock-background-hover: {config?.backgroundHoverColor};
+            --clock-font-color: {config?.fontColor};
+            --clock-font-color-hover: {config?.fontColor};
+            --alarm-background: {config?.alarmBgColor};
+            --alarm-font-color: {config?.alarmFontColor}"
 >
   <div
     class="clock-container"
@@ -48,7 +37,7 @@
       console.log(config)
     }}
     on:mouseleave={() => clockOpen=false}
-    style={`background: ${config.backgroundColor}`}
+    style={`background: ${config?.backgroundColor}`}
   >
     <div class="close-app">
       <button class="btn btn-circle btn-outline btn-xs" on:click={()=> closeApp()}>
@@ -70,9 +59,7 @@
       {time.toLocaleTimeString()}
     </div>
     <button class="open-configuration btn btn-info btn-active btn-sm" on:click={()=> openConfigWindow()}>Configuration</button>
-
-</div>
-
+  </div>
 </div>
 
 <style>

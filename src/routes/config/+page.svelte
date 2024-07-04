@@ -1,9 +1,20 @@
 <script lang="ts">
   // Add your configuration logic here
   import { configStore } from '../../stores/configStore';
+	import type { ConfigStore } from '../../stores/types';
+  import { debounce } from 'lodash-es';
+  
+  // const updateConfig = debounce((key: keyof ConfigStore, value: string | number) => {
+  //   configStore.update(config => ({ ...config, [key]: value }));
+  // }, 300); // Wait for 300ms of inactivity before updating
 
-  function updateConfig(key: string, value: any) {
-    configStore.update(current => ({ ...current, [key]: value }));
+  function updateConfig(key: keyof ConfigStore, value: string | number): void {
+    console.log(`Updating config: ${key} = ${value}`);
+    configStore.update(config => {
+      const newConfig = { ...config, [key]: value };
+      console.log('New config:', newConfig);
+      return newConfig;
+    });
   }
 
   let clockFormats = [
@@ -32,9 +43,7 @@
       class="input input-bordered input-sm w-full max-w-xs"
       bind:value={$configStore.backgroundColor}
       on:input={(e) => {
-        console.log(e.currentTarget.value)
         updateConfig('backgroundColor', e.currentTarget.value)
-        console.log('config, ', $configStore)
       }}
     />
   </div>

@@ -2,9 +2,11 @@
   import Clock from '$lib/Clock.svelte';
   import { onMount } from 'svelte';
   import { configStore } from '../stores/configStore';
+	import type { ConfigStore } from '../stores/types';
 
   let appWindow: any
   let WebviewWindow: any;
+  let config: ConfigStore;
 
   if (typeof window !== 'undefined') {
     import('@tauri-apps/api/window').then((module) => {
@@ -14,13 +16,18 @@
   }
   let configWindow: typeof WebviewWindow | null = null;
   onMount(() => {
-    console.log('config dfrom store: ', $configStore)
     appWindow?.listen('close-requested', () => {
       if (configWindow) {
         configWindow.close();
       }
       appWindow?.close();
     });
+    const unsubscribe = configStore.subscribe(value => {
+    config = value;
+    console.log('Clock received new config:', config);
+  });
+
+  return unsubscribe;
   });
 
   function closeApp() {
@@ -44,7 +51,7 @@
       configWindow.close();
     });
   }
-
+  console.log('store inside the base route', $configStore)
 </script>
 
 <style>
@@ -58,7 +65,7 @@
 </style>
 
 <Clock
-  config={$configStore}
+  config={config}
   openConfigWindow={openConfigWindow}
   closeApp={closeApp}
 />
