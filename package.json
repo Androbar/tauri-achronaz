@@ -41,6 +41,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"date-fns": "^3.6.0",
 		"lodash-es": "^4.17.21"
 	}
 }

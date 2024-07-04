@@ -2,12 +2,9 @@
   // Add your configuration logic here
   import { configStore } from '../../stores/configStore';
 	import type { ConfigStore } from '../../stores/types';
-  import { debounce } from 'lodash-es';
+  // import { debounce } from 'lodash-es';
+  // TODO: Implement debounce fo update config
   
-  // const updateConfig = debounce((key: keyof ConfigStore, value: string | number) => {
-  //   configStore.update(config => ({ ...config, [key]: value }));
-  // }, 300); // Wait for 300ms of inactivity before updating
-
   function updateConfig(key: keyof ConfigStore, value: string | number): void {
     console.log(`Updating config: ${key} = ${value}`);
     configStore.update(config => {
@@ -89,11 +86,19 @@
   </div>
   <div class="flex flex-row gap-x-6 justify-items-center content-center">
     <p>Alarm Bg color</p>
-    <input type="text" placeholder="#000" class="input input-bordered input-sm w-full max-w-xs" />
+    <input
+      type="color"
+      placeholder="#000"
+      class="input input-bordered input-sm w-full max-w-xs"
+    />
   </div>
   <div class="flex flex-row gap-x-6 justify-items-center content-center">
     <p>Alarm Font color</p>
-    <input type="text" placeholder="#000" class="input input-bordered input-sm w-full max-w-xs" />
+    <input
+      type="color"
+      placeholder="#000"
+      class="input input-bordered input-sm w-full max-w-xs"
+    />
   </div>
   <div class="flex flex-row gap-x-6 justify-items-center content-center">
     <p>Clock time format</p>
@@ -110,7 +115,11 @@
   <div class="form-control">
     <label class="cursor-pointer label">
       <span class="label-text">Show date</span>
-      <input type="checkbox" checked={null} class="checkbox checkbox-info" />
+      <input
+        type="checkbox"
+        checked={null}
+        class="checkbox checkbox-info"
+      />
     </label>
   </div>
   <div class="flex flex-row gap-x-6 justify-items-center content-center">

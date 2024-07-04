@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 	import type { ConfigStore } from '../stores/types';
+  import { format } from 'date-fns';
 
   export let openConfigWindow: () => void
   export let closeApp: () => void
@@ -8,13 +9,13 @@
   
   let clockOpen: boolean = false;
   let time: Date = new Date();
-  let alarmTriggered: boolean = false;
+  let alarmTriggered: boolean = true;
 
   onMount(() => {
-    if(!config) return
     const interval = setInterval(() => {
       time = new Date();
-      if (config.alarmTime && time.toLocaleTimeString() === config.alarmTime) {
+      const currentTime = format(time, 'HH:mm:ss');
+      if (config && config.alarmTime && currentTime === `${config.alarmTime}:00`) {
         alarmTriggered = true;
       }
     }, 1000);
@@ -30,14 +31,13 @@
             --alarm-font-color: {config?.alarmFontColor}"
 >
   <div
-    class="clock-container"
+    class={`clock-container ${alarmTriggered ? 'alarm' : ''}`}
     role="application"
     on:mouseenter={() => {
       clockOpen=true
       console.log(config)
     }}
     on:mouseleave={() => clockOpen=false}
-    style={`background: ${config?.backgroundColor}`}
   >
     <div class="close-app">
       <button class="btn btn-circle btn-outline btn-xs" on:click={()=> closeApp()}>
@@ -55,14 +55,38 @@
         </svg>
       </button>
     </div>
-    <div class="clock">
+    <div class={`clock ${alarmTriggered ? 'alarm' : ''}`}>
       {time.toLocaleTimeString()}
     </div>
-    <button class="open-configuration btn btn-info btn-active btn-sm" on:click={()=> openConfigWindow()}>Configuration</button>
+    {#if alarmTriggered}
+      <button
+        class="open-configuration btn btn-info btn-active btn-sm"
+        on:click={()=> {alarmTriggered = false}}>Stop Alarm
+      </button>
+    {:else}
+      <button
+        class="open-configuration btn btn-info btn-active btn-sm"
+        on:click={()=> openConfigWindow()}>Configuration
+      </button>
+    {/if}
   </div>
 </div>
 
 <style>
+  @keyframes backgroundTransition {
+    0% {
+      background: var(--clock-background);
+      color: var(--clock-font-color);
+    }
+    50% {
+      background: var(--alarm-background);
+      color: var(--alarm-font-color);
+    }
+    100% {
+      background: var(--clock-background);
+      color: var(--clock-font-color);
+    }
+  }
   .close-app {
     position: absolute;
     top: 0;
@@ -77,25 +101,34 @@
     opacity: 1;
   }
   .clock-container {
+    align-items: center;
+    background: var(--clock-background);
+    border-radius: 20px;
+    color: var(--clock-font-color);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
     font-size: 24px;
     font-weight: bold;
-    padding: 10px;
-    border-radius: 20px;
-    z-index: 10000;
-    width: 200px;
     height: 60px;
+    justify-content: center;
+    padding: 10px;
+    position: relative;
     transition: all 1.5s ease;
+    transition: background-color 1s, color 1s;
+    width: 200px;
+    z-index: 10000;
   }
   .clock-container:hover {
-    cursor: default;
-    width: 200px;
-    height: 70px;
     background: var(--clock-background-hover);
+    color: var(--clock-font-color-hover);
+    cursor: default;
+    height: 70px;
+    width: 200px;
+  }
+  .clock-container.alarm {
+    animation-name: backgroundTransition;
+    animation-duration: 2000ms;
+    animation-iteration-count: infinite;
   }
   .open-configuration{
     opacity: 0;
