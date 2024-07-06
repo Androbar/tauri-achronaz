@@ -3,19 +3,24 @@
 	import type { ConfigStore } from '../stores/types';
   import { format } from 'date-fns';
   import type { ClockFormat } from '$stores/types'
-	import { formatTime } from './utils/datetime';
+	import { formatDate, formatTime } from './utils/datetime';
   export let openConfigWindow: () => void
   export let closeApp: () => void
   export let config: ConfigStore | null;
   
   let clockOpen: boolean = false;
   let time: string;
+  let formattedDate: string;
   let alarmTriggered: boolean = true;
 
   onMount(() => {
   const updateTime = () => {
     const now = new Date();
     time = formatTime(now, config?.clockFormat);
+    if (config?.showDate) {
+      formattedDate = formatDate(now, config.dateFormat);
+    }
+
     if (config && config.alarmTime && time.startsWith(config.alarmTime)) {
       alarmTriggered = true;
     }
@@ -60,6 +65,11 @@
     <div class={`clock ${alarmTriggered ? 'alarm' : ''}`}>
       {time}
     </div>
+    {#if config?.showDate}
+      <div class="date">
+        {formattedDate}
+      </div>
+    {/if}
     {#if alarmTriggered}
       <button
         class="open-configuration btn btn-info btn-active btn-sm"
@@ -88,6 +98,9 @@
       background: var(--clock-background);
       color: var(--clock-font-color);
     }
+  }
+  .date {
+    font-size: smaller
   }
   .close-app {
     position: absolute;
