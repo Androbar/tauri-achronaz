@@ -1,13 +1,11 @@
 <script lang="ts">
   export let labelElement: HTMLLabelElement;
   export let label: string;
-  export let isOpen: boolean;
   export let hex: string;
   export let name: string | undefined = undefined;
+  /* svelte-ignore unused-export-let /** indicator of the popup state */
+  export let isOpen: boolean;
 
-  function handleOpen() {
-    isOpen = !isOpen;
-  }
   function noop() {
 		/* prevent browser color picker from opening unless javascript is broken */
 	}
@@ -22,11 +20,7 @@
 			value={hex}
 			on:click|preventDefault={noop}
 			on:mousedown|preventDefault={noop}
-      on:keydown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          handleOpen()
-        }
-      }}
+      on:keydown|preventDefault={noop}
 			aria-haspopup="dialog"
 		/>
 		<div class="alpha" />

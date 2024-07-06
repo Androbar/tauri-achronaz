@@ -26,7 +26,7 @@
 <div style="--clock-background: {config?.backgroundColor};
             --clock-background-hover: {config?.backgroundHoverColor};
             --clock-font-color: {config?.fontColor};
-            --clock-font-color-hover: {config?.fontColor};
+            --clock-font-color-hover: {config?.fontHoverColor};
             --alarm-background: {config?.alarmBgColor};
             --alarm-font-color: {config?.alarmFontColor}"
 >

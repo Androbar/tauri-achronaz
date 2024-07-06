@@ -1,21 +1,15 @@
 <script lang="ts">
   // Add your configuration logic here
   import { configStore } from '../../stores/configStore';
-	import type { ConfigStore } from '../../stores/types';
-  import ColorPicker from 'svelte-awesome-color-picker';
+  import ColorSelector from '$lib/ColorSelector.svelte';
+	import { updateConfig } from '$lib/utils/updateStore';
+	import { update } from 'lodash-es';
+	import ColorPicker from 'svelte-awesome-color-picker';
   import CustomColorInput from '$lib/CustomColorInput.svelte';
   // import { debounce } from 'lodash-es';
   // TODO: Implement debounce fo update config
 
-  
-  function updateConfig(key: keyof ConfigStore, value: string | number): void {
-    configStore.update(config => {
-      const newConfig = { ...config, [key]: value };
-      return newConfig;
-    });
-  }
-  let hex = $configStore.backgroundColor
-  let isOpen: boolean = false;
+
   let clockFormats = [
     "HH:MM:SS AM/PM",
     "HH:MM:SS 24H",
@@ -30,59 +24,35 @@
   ]
   let defaultClockFormat = clockFormats[0]
   let defaultDateFormat = dateFormats[0]
-
+  let hex = $configStore.backgroundColor
 </script>
 
 <div>
   <h1>Configuration</h1>
-  <div class="flex flex-row gap-x-6 justify-items-center content-center">
-    <p>Background color</p>
-    <ColorPicker
-      label=""
-      name="background-color"
-      bind:hex
-      on:input={(e) => {
-        updateConfig('backgroundColor', e.detail.hex || '#ffffff')
-      }}
-      components={{ input: CustomColorInput }}
-    />
-  </div>
-  <div class="flex flex-row gap-x-6 justify-items-center content-center">
-    <p>Font color</p>
-    <ColorPicker
-      bind:hex
-      on:input={(e) => {
-        updateConfig('fontColor', e.detail.hex || '#ffffff')
-      }}
-    />
-    <!-- <input
-      type="color"
-      placeholder="#000"
-      class="input input-bordered input-sm w-full max-w-xs"
-      bind:value={$configStore.fontColor}
-      on:input={(e) => updateConfig('fontColor', e.currentTarget.value)}
-    /> -->
-  </div>
-  <div class="flex flex-row gap-x-6 justify-items-center content-center">
-    <p>Background color on hover</p>
-    <input
-      type="color"
-      placeholder="#fff"
-      class="input input-bordered input-sm w-full max-w-xs"
-      bind:value={$configStore.backgroundHoverColor}
-      on:input={(e) => updateConfig('backgroundHoverColor', e.currentTarget.value)}
-    />
-  </div>
-  <div class="flex flex-row gap-x-6 justify-items-center content-center">
-    <p>Font color on hover</p>
-    <input
-      type="color"
-      placeholder="#000"
-      class="input input-bordered input-sm w-full max-w-xs"
-      bind:value={$configStore.fontHoverColor}
-      on:input={(e) => updateConfig('fontHoverColor', e.currentTarget.value)}
-    />
-  </div>
+  <ColorSelector
+    label="Background color"
+    name="background-color"
+    key="backgroundColor"
+    currentColor={$configStore.backgroundColor}
+  />
+  <ColorSelector
+    label="Font color"
+    name="font-color"
+    key="fontColor"
+    currentColor={$configStore.fontColor}
+  />
+  <ColorSelector
+    label="Background color on hover"
+    name="background-color-hover"
+    key="backgroundHoverColor"
+    currentColor={$configStore.backgroundHoverColor}
+  />
+  <ColorSelector
+    label="Font color on hover"
+    name="font-color-hover"
+    key="fontHoverColor"
+    currentColor={$configStore.fontHoverColor}
+  />
   <div class="flex flex-row gap-x-6 justify-items-center content-center">
     <p>Alarm Time</p>
     <input
@@ -93,22 +63,19 @@
       on:change={(e) => updateConfig('alarmTime', e.currentTarget.value)}
     />
   </div>
-  <div class="flex flex-row gap-x-6 justify-items-center content-center">
-    <p>Alarm Bg color</p>
-    <input
-      type="color"
-      placeholder="#000"
-      class="input input-bordered input-sm w-full max-w-xs"
-    />
-  </div>
-  <div class="flex flex-row gap-x-6 justify-items-center content-center">
-    <p>Alarm Font color</p>
-    <input
-      type="color"
-      placeholder="#000"
-      class="input input-bordered input-sm w-full max-w-xs"
-    />
-  </div>
+  <ColorSelector
+    label="Alarm Bg color"
+    name="alarm-background-color"
+    key="alarmBgColor"
+    currentColor={$configStore.alarmBgColor}
+  />
+  <ColorSelector
+    label="Alarm Font color"
+    name="alarm-font-color"
+    key="alarmFontColor"
+    currentColor={$configStore.alarmFontColor}
+  />
+
   <div class="flex flex-row gap-x-6 justify-items-center content-center">
     <p>Clock time format</p>
     <select class="select select-bordered select-sm w-full max-w-xs">
