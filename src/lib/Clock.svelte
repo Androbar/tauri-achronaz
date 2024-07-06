@@ -2,25 +2,30 @@
   import { onMount } from 'svelte';
 	import type { ConfigStore } from '../stores/types';
   import { format } from 'date-fns';
-
+  import type { ClockFormat } from '$stores/types'
+	import { formatTime } from './utils/datetime';
   export let openConfigWindow: () => void
   export let closeApp: () => void
   export let config: ConfigStore | null;
   
   let clockOpen: boolean = false;
-  let time: Date = new Date();
+  let time: string;
   let alarmTriggered: boolean = true;
 
   onMount(() => {
-    const interval = setInterval(() => {
-      time = new Date();
-      const currentTime = format(time, 'HH:mm:ss');
-      if (config && config.alarmTime && currentTime === `${config.alarmTime}:00`) {
-        alarmTriggered = true;
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  });
+  const updateTime = () => {
+    const now = new Date();
+    time = formatTime(now, config?.clockFormat);
+    if (config && config.alarmTime && time.startsWith(config.alarmTime)) {
+      alarmTriggered = true;
+    }
+  };
+
+  updateTime();
+  const interval = setInterval(updateTime, 1000);
+  return () => clearInterval(interval);
+});
+
 </script>
 
 <div style="--clock-background: {config?.backgroundColor};
@@ -53,7 +58,7 @@
       </button>
     </div>
     <div class={`clock ${alarmTriggered ? 'alarm' : ''}`}>
-      {time.toLocaleTimeString()}
+      {time}
     </div>
     {#if alarmTriggered}
       <button

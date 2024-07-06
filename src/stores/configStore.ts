@@ -9,8 +9,8 @@ const defaultConfig = {
   fontHoverColor: '#000',
   alarmBgColor: 'red',
   alarmFontColor: '#fff',
-  clockFormat: 'HH:MM:SS AM/PM',
-  dateFormat: 'DD/MM/YYYY',
+  clockFormat: 'HH:MM:SS AM/PM' as const,
+  dateFormat: 'DD/MM/YYYY' as const,
   showDate: false,
   alarmTime: null,
 }

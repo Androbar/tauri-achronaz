@@ -1,29 +1,14 @@
 <script lang="ts">
-  // Add your configuration logic here
-  import { configStore } from '../../stores/configStore';
+  import { configStore } from '$stores/configStore';
   import ColorSelector from '$lib/ColorSelector.svelte';
 	import { updateConfig } from '$lib/utils/updateStore';
-	import { update } from 'lodash-es';
-	import ColorPicker from 'svelte-awesome-color-picker';
-  import CustomColorInput from '$lib/CustomColorInput.svelte';
+	import { dateFormats } from '$stores/constants';
+	import { clockFormats } from '$stores/constants';
   // import { debounce } from 'lodash-es';
   // TODO: Implement debounce fo update config
 
-
-  let clockFormats = [
-    "HH:MM:SS AM/PM",
-    "HH:MM:SS 24H",
-    "HH:MM AM/PM",
-    "HH:MM 24H",
-  ]
-  let dateFormats = [
-    "DD/MM/YYYY",
-    "DD/MM/YY",
-    "MM/DD/YYYY",
-    "MM/DD/YY",
-  ]
-  let currentClockFormat = $configStore.clockFormat || clockFormats[0]
-  let currentDateFormat = $configStore.dateFormat || dateFormats[0]
+  let currentClockFormat = $configStore.clockFormat
+  let currentDateFormat = $configStore.dateFormat
 </script>
 
 <div>
