@@ -2,18 +2,20 @@
   // Add your configuration logic here
   import { configStore } from '../../stores/configStore';
 	import type { ConfigStore } from '../../stores/types';
+  import ColorPicker from 'svelte-awesome-color-picker';
+  import CustomColorInput from '$lib/CustomColorInput.svelte';
   // import { debounce } from 'lodash-es';
   // TODO: Implement debounce fo update config
+
   
   function updateConfig(key: keyof ConfigStore, value: string | number): void {
-    console.log(`Updating config: ${key} = ${value}`);
     configStore.update(config => {
       const newConfig = { ...config, [key]: value };
-      console.log('New config:', newConfig);
       return newConfig;
     });
   }
-
+  let hex = $configStore.backgroundColor
+  let isOpen: boolean = false;
   let clockFormats = [
     "HH:MM:SS AM/PM",
     "HH:MM:SS 24H",
@@ -28,31 +30,38 @@
   ]
   let defaultClockFormat = clockFormats[0]
   let defaultDateFormat = dateFormats[0]
+
 </script>
 
 <div>
   <h1>Configuration</h1>
   <div class="flex flex-row gap-x-6 justify-items-center content-center">
     <p>Background color</p>
-    <input
-      type="color"
-      placeholder="#fff"
-      class="input input-bordered input-sm w-full max-w-xs"
-      bind:value={$configStore.backgroundColor}
+    <ColorPicker
+      label=""
+      name="background-color"
+      bind:hex
       on:input={(e) => {
-        updateConfig('backgroundColor', e.currentTarget.value)
+        updateConfig('backgroundColor', e.detail.hex || '#ffffff')
       }}
+      components={{ input: CustomColorInput }}
     />
   </div>
   <div class="flex flex-row gap-x-6 justify-items-center content-center">
     <p>Font color</p>
-    <input
+    <ColorPicker
+      bind:hex
+      on:input={(e) => {
+        updateConfig('fontColor', e.detail.hex || '#ffffff')
+      }}
+    />
+    <!-- <input
       type="color"
       placeholder="#000"
       class="input input-bordered input-sm w-full max-w-xs"
       bind:value={$configStore.fontColor}
       on:input={(e) => updateConfig('fontColor', e.currentTarget.value)}
-    />
+    /> -->
   </div>
   <div class="flex flex-row gap-x-6 justify-items-center content-center">
     <p>Background color on hover</p>

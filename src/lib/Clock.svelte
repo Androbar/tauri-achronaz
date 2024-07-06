@@ -33,10 +33,7 @@
   <div
     class={`clock-container ${alarmTriggered ? 'alarm' : ''}`}
     role="application"
-    on:mouseenter={() => {
-      clockOpen=true
-      console.log(config)
-    }}
+    on:mouseenter={() => clockOpen=true}
     on:mouseleave={() => clockOpen=false}
   >
     <div class="close-app">
