@@ -13,9 +13,16 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "globalShortcut": {
+        "all": true
+      },
       "window": {
         "close": true,
-        "create": true
+        "create": true,
+        "show": true,
+        "hide": true,
+        "setSize": true,
+        "setPosition": true
       }
     },
     "bundle": {

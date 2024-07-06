@@ -3,18 +3,37 @@
   import { onMount } from 'svelte';
   import { configStore } from '../stores/configStore';
 	import type { ConfigStore } from '../stores/types';
+  import { register, unregister } from '@tauri-apps/api/globalShortcut';
 
   let appWindow: any
   let WebviewWindow: any;
   let config: ConfigStore;
+  let isVisible = true;
+  let PhysicalSize: any;
 
   if (typeof window !== 'undefined') {
     import('@tauri-apps/api/window').then((module) => {
       appWindow = module.appWindow;
       WebviewWindow = module.WebviewWindow;
+      PhysicalSize = module.PhysicalSize
     });
   }
   let configWindow: typeof WebviewWindow | null = null;
+
+  async function registerShortcut() {
+    try {
+      await register('CommandOrControl+Shift+H', async () => {
+        if (isVisible) {
+          await hideClock();
+        } else {
+          await showClock();
+        }
+      });
+    } catch (error) {
+      console.error('Error registering shortcut:', error);
+    }
+  }
+
   onMount(() => {
     appWindow?.listen('close-requested', () => {
       if (configWindow) {
@@ -22,12 +41,17 @@
       }
       appWindow?.close();
     });
-    const unsubscribe = configStore.subscribe(value => {
-    config = value;
-    console.log('Clock received new config:', config);
-  });
 
-  return unsubscribe;
+    const unsubscribe = configStore.subscribe(value => {
+      config = value;
+    });
+
+    registerShortcut()
+
+    return () => {
+      unregister('CommandOrControl+Shift+H');
+      unsubscribe();
+    };
   });
 
   function closeApp() {
@@ -52,6 +76,16 @@
     });
   }
   console.log('store inside the base route', $configStore)
+  async function showClock() {
+    isVisible = true;
+    await appWindow.setSize(new PhysicalSize(280, 80));
+    await appWindow.show();
+  }
+
+  async function hideClock() {
+    isVisible = false;
+    await appWindow.hide();
+  }
 </script>
 
 <style>
