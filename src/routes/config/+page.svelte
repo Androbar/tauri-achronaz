@@ -22,9 +22,8 @@
     "MM/DD/YYYY",
     "MM/DD/YY",
   ]
-  let defaultClockFormat = clockFormats[0]
-  let defaultDateFormat = dateFormats[0]
-  let hex = $configStore.backgroundColor
+  let currentClockFormat = $configStore.clockFormat || clockFormats[0]
+  let currentDateFormat = $configStore.dateFormat || dateFormats[0]
 </script>
 
 <div>
@@ -57,7 +56,6 @@
     <p>Alarm Time</p>
     <input
       type="time"
-      placeholder="#000"
       class="input input-bordered input-sm w-full max-w-xs"
       bind:value={$configStore.alarmTime}
       on:change={(e) => updateConfig('alarmTime', e.currentTarget.value)}
@@ -78,9 +76,13 @@
 
   <div class="flex flex-row gap-x-6 justify-items-center content-center">
     <p>Clock time format</p>
-    <select class="select select-bordered select-sm w-full max-w-xs">
+    <select
+      class="select select-bordered select-sm w-full max-w-xs"
+      bind:value={$configStore.clockFormat}
+      on:change={(e) => updateConfig('clockFormat', e.currentTarget.value)}
+    >
       {#each clockFormats as format}
-        {#if format === defaultClockFormat}
+        {#if format === currentClockFormat}
         <option selected>{format}</option>
         {:else}
         <option>{format}</option>
@@ -88,21 +90,24 @@
       {/each}
     </select>
   </div>
-  <div class="form-control">
-    <label class="cursor-pointer label">
-      <span class="label-text">Show date</span>
-      <input
-        type="checkbox"
-        checked={null}
-        class="checkbox checkbox-info"
+  <div class="flex flex-row gap-x-6 justify-items-center content-center">
+    <p>Show date</p>
+    <input
+      type="checkbox"
+      class="checkbox checkbox-info"
+      bind:checked={$configStore.showDate}
+      on:click={(e) => updateConfig('showDate', !$configStore.showDate)}
       />
-    </label>
   </div>
   <div class="flex flex-row gap-x-6 justify-items-center content-center">
     <p>Date format</p>
-    <select class="select select-bordered select-sm w-full max-w-xs">
+    <select
+      class="select select-bordered select-sm w-full max-w-xs"
+      bind:value={$configStore.dateFormat}
+      on:change={(e) => updateConfig('dateFormat', e.currentTarget.value)}
+    >
       {#each dateFormats as format}
-        {#if format === defaultDateFormat}
+        {#if format === currentDateFormat}
         <option selected>{format}</option>
         {:else}
         <option>{format}</option>
