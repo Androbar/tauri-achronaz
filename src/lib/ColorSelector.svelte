@@ -3,6 +3,7 @@
 	import CustomColorInput from "./CustomColorInput.svelte";
 	import type { ConfigStore } from "../stores/types";
 	import { updateConfig } from "./utils/updateStore";
+	import ConfigurationWrapper from "./ConfigurationWrapper.svelte";
 
   export let label: string;
   export let name: string | undefined = undefined;
@@ -13,7 +14,7 @@
   let hex = currentColor;
 </script>
 
-<div class="flex flex-row gap-x-6 justify-items-center content-center">
+<ConfigurationWrapper>
   <p>{label}</p>
   <ColorPicker
     label=""
@@ -24,4 +25,4 @@
     }}
     components={{ input: CustomColorInput }}
   />
-</div>
+</ConfigurationWrapper>

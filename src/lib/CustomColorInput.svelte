@@ -12,7 +12,7 @@
 
 </script>
 
-<label bind:this={labelElement}>
+<label bind:this={labelElement} class="input-bordered">
 	<div class="container">
 		<input
 			type="color"
@@ -35,13 +35,12 @@
 		align-items: center;
 		gap: 8px;
 		cursor: pointer;
-		border-radius: 3px;
-		margin: 4px;
-		height: var(--input-size, 25px);
+		border-radius: 5px;
+		height: var(--input-size, 27px);
 		user-select: none;
-    width: 100%;
-    max-width: 20rem;
-    min-width: 20rem;
+    width: 320px;
+		border: 1px solid;
+		border-color: var(--fallback-bc,oklch(var(--bc)/0.2));
 	}
 
 	.container {

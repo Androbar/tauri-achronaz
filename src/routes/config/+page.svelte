@@ -4,6 +4,7 @@
 	import { updateConfig } from '$lib/utils/updateStore';
 	import { dateFormats } from '$stores/constants';
 	import { clockFormats } from '$stores/constants';
+	import ConfigurationWrapper from '$lib/ConfigurationWrapper.svelte';
   // import { debounce } from 'lodash-es';
   // TODO: Implement debounce fo update config
 
@@ -11,7 +12,7 @@
   let currentDateFormat = $configStore.dateFormat
 </script>
 
-<div>
+<div class="config-container flex flex-col gap-1">
   <h1>Configuration</h1>
   <ColorSelector
     label="Background color"
@@ -37,7 +38,7 @@
     key="fontHoverColor"
     currentColor={$configStore.fontHoverColor}
   />
-  <div class="flex flex-row gap-x-6 justify-items-center content-center">
+  <ConfigurationWrapper>
     <p>Alarm Time</p>
     <input
       type="time"
@@ -45,7 +46,7 @@
       bind:value={$configStore.alarmTime}
       on:change={(e) => updateConfig('alarmTime', e.currentTarget.value)}
     />
-  </div>
+  </ConfigurationWrapper>
   <ColorSelector
     label="Alarm Bg color"
     name="alarm-background-color"
@@ -59,7 +60,7 @@
     currentColor={$configStore.alarmFontColor}
   />
 
-  <div class="flex flex-row gap-x-6 justify-items-center content-center">
+  <ConfigurationWrapper>
     <p>Clock time format</p>
     <select
       class="select select-bordered select-sm w-full max-w-xs"
@@ -74,20 +75,22 @@
         {/if}
       {/each}
     </select>
-  </div>
-  <div class="flex flex-row gap-x-6 justify-items-center content-center">
+  </ConfigurationWrapper>
+  <ConfigurationWrapper>
     <p>Show date</p>
-    <input
-      type="checkbox"
-      class="checkbox checkbox-info"
-      bind:checked={$configStore.showDate}
-      on:click={(e) => updateConfig('showDate', !$configStore.showDate)}
-      />
-  </div>
-  <div class="flex flex-row gap-x-6 justify-items-center content-center">
-    <p>Date format</p>
+    <div class="w-full flex items-center checkbox-wrapper">
+      <input
+        type="checkbox"
+        class="checkbox checkbox-info"
+        bind:checked={$configStore.showDate}
+        on:click={(e) => updateConfig('showDate', !$configStore.showDate)}
+        />
+    </div>
+  </ConfigurationWrapper>
+  <ConfigurationWrapper>
+    <p class="config-label">Date format</p>
     <select
-      class="select select-bordered select-sm w-full max-w-xs"
+      class="config-picker select select-bordered select-sm w-full max-w-xs"
       bind:value={$configStore.dateFormat}
       on:change={(e) => updateConfig('dateFormat', e.currentTarget.value)}
     >
@@ -99,5 +102,18 @@
         {/if}
       {/each}
     </select>
-  </div>
+  </ConfigurationWrapper>
 </div>
+
+<style>
+  .config-container {
+    max-width: 720px;
+    margin: 0 auto;
+    /* border: 1px solid black; */
+    padding: 15px;
+    border-radius: 5px;
+  }
+  .checkbox-wrapper {
+    width: 20rem;
+  }
+</style>
