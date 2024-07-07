@@ -40,7 +40,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.androbar.achronaz",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -73,7 +73,7 @@
         "transparent": true,
         "decorations": false,
         "resizable": true,
-        "alwaysOnTop": false
+        "alwaysOnTop": true
       }
     ]
   }

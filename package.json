@@ -12,10 +12,12 @@
 		"format": "prettier --write .",
 		"tauri": "tauri",
 		"tauri:dev": "tauri dev",
-		"tauri:build": "tauri build"
+		"tauri:build": "npm run build && tauri build",
+		"tauri:build:win": "npm run build && tauri build --target x86_64-pc-windows-gnu"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
+		"@sveltejs/adapter-static": "^3.0.2",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@tauri-apps/api": "^1.5.6",
