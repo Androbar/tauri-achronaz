@@ -10,16 +10,18 @@
   let time: string;
   let formattedDate: string;
   let alarmTriggered: boolean = false;
+  let alarmFormatTime: string;
 
   onMount(() => {
   const updateTime = () => {
     const now = new Date();
     time = formatTime(now, config?.clockFormat);
+    alarmFormatTime = formatTime(now, 'HH:MM:SS 24H')
     if (config?.showDate) {
       formattedDate = formatDate(now, config.dateFormat);
     }
-
-    if (config && config.alarmTime && time.startsWith(config.alarmTime)) {
+    
+    if (config && config.alarmTime && alarmFormatTime === `${config.alarmTime}:00`) {
       alarmTriggered = true;
     }
   };

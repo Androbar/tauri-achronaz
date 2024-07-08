@@ -56,7 +56,7 @@
   .config-container {
     max-width: 720px;
     margin: 0 auto;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     padding: 15px;
     border-radius: 5px;
   }
