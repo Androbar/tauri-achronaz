@@ -64,8 +64,8 @@
   function openConfigWindow() {
     configWindow = new WebviewWindow('config', {
       url: '/config',
-      width: 600,
-      height: 400,
+      width: 850,
+      height: 450,
       title: 'Configuration',
       resizable: true,
       decorations: true,
@@ -103,8 +103,3 @@
   openConfigWindow={openConfigWindow}
   closeApp={closeApp}
 />
-<!-- <Clock
-  openConfigWindow={openConfigWindow}
-  closeApp={closeApp}
-/> -->
-

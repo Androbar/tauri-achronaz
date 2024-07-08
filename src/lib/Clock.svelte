@@ -1,8 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 	import type { ConfigStore } from '../stores/types';
-  import { format } from 'date-fns';
-  import type { ClockFormat } from '$stores/types'
 	import { formatDate, formatTime } from './utils/datetime';
   export let openConfigWindow: () => void
   export let closeApp: () => void
