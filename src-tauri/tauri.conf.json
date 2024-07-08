@@ -22,7 +22,8 @@
         "show": true,
         "hide": true,
         "setSize": true,
-        "setPosition": true
+        "setPosition": true,
+        "startDragging": true
       }
     },
     "bundle": {

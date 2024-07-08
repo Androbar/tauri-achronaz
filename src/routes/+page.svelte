@@ -18,8 +18,12 @@
       PhysicalSize = module.PhysicalSize
     });
   }
+
   let configWindow: typeof WebviewWindow | null = null;
 
+  async function enableMoveMode() {
+    await appWindow.startDragging();
+  }
   async function registerShortcut() {
     try {
       await register('CommandOrControl+Shift+H', async () => {
@@ -102,4 +106,5 @@
   config={config}
   openConfigWindow={openConfigWindow}
   closeApp={closeApp}
+  enableMoveMode={enableMoveMode}
 />

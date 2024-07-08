@@ -2,8 +2,10 @@
   import { onMount } from 'svelte';
 	import type { ConfigStore } from '../stores/types';
 	import { formatDate, formatTime } from './utils/datetime';
-  export let openConfigWindow: () => void
-  export let closeApp: () => void
+
+  export let openConfigWindow: () => void;
+  export let closeApp: () => void;
+  export let enableMoveMode: () => void;
   export let config: ConfigStore | null;
   
   let clockOpen: boolean = false;
@@ -46,20 +48,9 @@
     on:mouseenter={() => clockOpen=true}
     on:mouseleave={() => clockOpen=false}
   >
-    <div class="close-app">
-      <button class="btn btn-circle btn-outline btn-xs" on:click={()=> closeApp()}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12" />
-        </svg>
+    <div class="close-app text-blue-600/100">
+      <button class="" on:click={()=> closeApp()}>
+        <iconify-icon icon="ci:close-square" width="34" height="34"></iconify-icon>
       </button>
     </div>
     <div class={`clock ${alarmTriggered ? 'alarm' : ''}`}>
@@ -72,14 +63,30 @@
     {/if}
     {#if alarmTriggered}
       <button
-        class="open-configuration btn btn-info btn-active btn-sm"
-        on:click={()=> {alarmTriggered = false}}>Stop Alarm
+        class="open-configuration btn btn-sm bg-red-600 hover:bg-red-900"
+        on:click={()=> {alarmTriggered = false}}>
+        <iconify-icon icon="clarity:alarm-off-line" width="22" height="22"></iconify-icon>
       </button>
     {:else}
-      <button
-        class="open-configuration btn btn-info btn-active btn-sm"
-        on:click={()=> openConfigWindow()}>Configuration
-      </button>
+      <div class="flex gap-1">
+        <button
+          data-tauri-drag-region
+          class="open-configuration btn btn-sm bg-blue-600 hover:bg-blue-900"
+          on:click={()=> enableMoveMode()}>
+          <div class="drag-wraper icon">
+            <div class="transparent-drag-overlay" data-tauri-drag-region></div>
+            <div class="icon icon-background" data-tauri-drag-region>
+              <iconify-icon icon="carbon:move" width="22" height="22"></iconify-icon>
+            </div>
+          </div>
+        </button>
+        <button
+          class="open-configuration btn btn-sm bg-blue-600 hover:bg-blue-900"
+          on:click={()=> openConfigWindow()}>
+            <iconify-icon icon="mdi:gear" width="22" height="22"></iconify-icon>
+        </button>
+      </div>
+
     {/if}
   </div>
 </div>
@@ -99,18 +106,37 @@
       color: var(--clock-font-color);
     }
   }
+  .icon {
+    color: #fff;
+    width: 22px;
+    height: 22px;
+  }
+  .drag-wraper {
+    position: relative;
+  }
+  .transparent-drag-overlay {
+    position: absolute;
+    background: transparent;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+  }
+  .icon-background {
+    position: absolute;
+
+  }
   .date {
     font-size: smaller
   }
   .close-app {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 5px;
+    right: 19px;
     transform: translate(50%, -50%);
     opacity: 0;
     transition: all 1.5s ease;
     height: 20px;
-    width: 20px;
+    width: 20px
   }
   .clock-container:hover .close-app {
     opacity: 1;
@@ -118,7 +144,7 @@
   .clock-container {
     align-items: center;
     background: var(--clock-background);
-    border-radius: 20px;
+    border-radius: 5px;
     color: var(--clock-font-color);
     display: flex;
     flex-direction: column;
@@ -128,8 +154,8 @@
     justify-content: center;
     padding: 10px;
     position: relative;
-    transition: all 1.5s ease;
-    transition: background-color 1s, color 1s;
+    transition: all 0.5s ease;
+    /* transition: background-color 1s, color 1s; */
     width: 200px;
     z-index: 10000;
   }
@@ -147,7 +173,7 @@
   }
   .open-configuration{
     opacity: 0;
-    transition: all 1.5s ease;
+    transition: all 0.5s ease;
     height: 0;
     min-height: 0;
     color: white;
