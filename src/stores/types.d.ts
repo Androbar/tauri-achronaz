@@ -14,4 +14,6 @@ export type ConfigStore = {
   dateFormat: DateFormat
   showDate: boolean
   alarmTime: string | null,
+  fontFamily: string 
+  fontSize: number
 }

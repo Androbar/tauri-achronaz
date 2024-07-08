@@ -4,6 +4,8 @@
 use tauri::api::path::document_dir;
 use std::fs;
 use std::path::PathBuf;
+use tauri::command;
+use font_loader::system_fonts;
 
 #[tauri::command]
 fn save_config(data: String) {
@@ -22,8 +24,15 @@ fn load_config() -> String {
     "".to_string()
 }
 
+#[command]
+fn get_system_fonts() -> Vec<String> {
+    let fonts = system_fonts::query_all();
+    fonts.into_iter().collect()
+}
+
 fn main() {
   tauri::Builder::default()
+    .invoke_handler(tauri::generate_handler![get_system_fonts])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

@@ -13,6 +13,8 @@ const defaultConfig = {
   dateFormat: 'DD/MM/YYYY' as const,
   showDate: false,
   alarmTime: null,
+  fontFamily: 'Arial, sans-serif',
+  fontSize: 44
 }
 
 const storedConfig: ConfigStore | null  = typeof localStorage !== 'undefined'

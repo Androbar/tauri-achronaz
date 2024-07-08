@@ -40,7 +40,9 @@
             --clock-font-color: {config?.fontColor};
             --clock-font-color-hover: {config?.fontHoverColor};
             --alarm-background: {config?.alarmBgColor};
-            --alarm-font-color: {config?.alarmFontColor}"
+            --alarm-font-color: {config?.alarmFontColor};
+            --clock-font: {config?.fontFamily};
+            --clock-font-size: {config?.fontSize}px"
 >
   <div
     class={`clock-container ${alarmTriggered ? 'alarm' : ''}`}
@@ -183,5 +185,9 @@
     height: auto;
     min-height: 2rem;
 
+  }
+  .clock {
+    font-family: var(--clock-font);
+    font-size: var(--clock-font-size);
   }
 </style>

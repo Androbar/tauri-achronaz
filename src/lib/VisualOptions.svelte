@@ -9,7 +9,44 @@
   let currentClockFormat = $configStore.clockFormat
   let currentDateFormat = $configStore.dateFormat
 
+  let systemFonts: string[] = [];
+  let isClient = typeof window !== 'undefined';
+
+  if (isClient) {
+    import('@tauri-apps/api').then(({ invoke }) => {
+      async function fetchSystemFonts() {
+        try {
+          systemFonts = await invoke('get_system_fonts');
+        } catch (error) {
+          console.error('Failed to fetch system fonts', error);
+        }
+      }
+      fetchSystemFonts();
+    });
+  }
+
 </script>
+<ConfigurationWrapper>
+  <p>Font Family</p>
+  <select
+    class="select select-bordered select-sm w-full max-w-xs"
+    bind:value={$configStore.fontFamily}
+    on:change={(e) => updateConfig('fontFamily', e.currentTarget.value)}
+  >
+    {#each systemFonts as font}
+      <option value={font}>{font}</option>
+    {/each}
+  </select>
+</ConfigurationWrapper>
+<ConfigurationWrapper>
+  <p>Font size</p>
+  <input
+    type="number"
+    class="w-full max-w-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-1"
+    bind:value={$configStore.fontSize}
+    on:change={(e) => updateConfig('fontSize', e.currentTarget.value)}
+  />
+</ConfigurationWrapper>
 
 <ColorSelector
   label="Background color"
