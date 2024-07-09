@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
 	import type { ConfigStore } from '../stores/types';
 	import { formatDate, formatTime } from './utils/datetime';
+  import { defaultConfig } from '$stores/configStore';
 
   export let openConfigWindow: () => void;
   export let closeApp: () => void;
@@ -35,14 +36,16 @@
 
 </script>
 
-<div style="--clock-background: {config?.backgroundColor};
-            --clock-background-hover: {config?.backgroundHoverColor};
-            --clock-font-color: {config?.fontColor};
-            --clock-font-color-hover: {config?.fontHoverColor};
-            --alarm-background: {config?.alarmBgColor};
-            --alarm-font-color: {config?.alarmFontColor};
-            --clock-font: {config?.fontFamily};
-            --clock-font-size: {config?.fontSize}px"
+<div style="--clock-background: {config?.backgroundColor || defaultConfig.backgroundColor};
+            --clock-background-hover: {config?.backgroundHoverColor || defaultConfig.backgroundHoverColor};
+            --clock-font-color: {config?.fontColor || defaultConfig.fontColor};
+            --clock-font-color-hover: {config?.fontHoverColor || defaultConfig.fontHoverColor};
+            --alarm-background: {config?.alarmBgColor || defaultConfig.alarmBgColor};
+            --alarm-font-color: {config?.alarmFontColor || defaultConfig.alarmFontColor};
+            --clock-font: {config?.fontFamily || defaultConfig.fontFamily};
+            --clock-font-size: {config?.fontSize || defaultConfig.fontSize}px;
+            --button-color: {config?.buttonColor || defaultConfig.buttonColor};
+            --button-color-hover: {config?.buttonColorHover || defaultConfig.buttonColorHover};"
 >
   <div
     class={`clock-container ${alarmTriggered ? 'alarm' : ''}`}
@@ -50,7 +53,7 @@
     on:mouseenter={() => clockOpen=true}
     on:mouseleave={() => clockOpen=false}
   >
-    <div class="close-app text-blue-600/100">
+    <div class="close-app">
       <button class="" on:click={()=> closeApp()}>
         <iconify-icon icon="ci:close-square" width="34" height="34"></iconify-icon>
       </button>
@@ -65,7 +68,7 @@
     {/if}
     {#if alarmTriggered}
       <button
-        class="open-configuration btn btn-sm bg-red-600 hover:bg-red-900"
+        class="open-configuration btn btn-sm border-transparent hover:border-transparent bg-red-600 hover:bg-red-900"
         on:click={()=> {alarmTriggered = false}}>
         <iconify-icon icon="clarity:alarm-off-line" width="22" height="22"></iconify-icon>
       </button>
@@ -73,7 +76,7 @@
       <div class="flex gap-1">
         <button
           data-tauri-drag-region
-          class="open-configuration btn btn-sm bg-blue-600 hover:bg-blue-900"
+          class="open-configuration btn btn-sm border-transparent hover:border-transparent"
           on:click={()=> enableMoveMode()}>
           <div class="drag-wraper icon">
             <div class="transparent-drag-overlay" data-tauri-drag-region></div>
@@ -83,7 +86,7 @@
           </div>
         </button>
         <button
-          class="open-configuration btn btn-sm bg-blue-600 hover:bg-blue-900"
+          class="open-configuration btn btn-sm border-transparent hover:border-transparent"
           on:click={()=> openConfigWindow()}>
             <iconify-icon icon="mdi:gear" width="22" height="22"></iconify-icon>
         </button>
@@ -136,9 +139,13 @@
     right: 19px;
     transform: translate(50%, -50%);
     opacity: 0;
-    transition: all 1.5s ease;
+    transition: all 0.5s ease;
     height: 20px;
-    width: 20px
+    width: 20px;
+    color: var(--button-color);
+  }
+  .close-app:hover {
+    color: var(--button-color-hover)
   }
   .clock-container:hover .close-app {
     opacity: 1;
@@ -179,12 +186,15 @@
     height: 0;
     min-height: 0;
     color: white;
+    background-color: var(--button-color);
   }
   .clock-container:hover .open-configuration{
     opacity: 1;
     height: auto;
     min-height: 2rem;
-
+  }
+  .open-configuration:hover{
+    background-color: var(--button-color-hover);
   }
   .clock {
     font-family: var(--clock-font);

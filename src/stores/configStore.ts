@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import type { ConfigStore } from './types';
 
 
-const defaultConfig = {
+export const defaultConfig = {
   backgroundColor: '#ffffff99',
   backgroundHoverColor: '#ffffffff',
   fontColor: '#000',
@@ -14,13 +14,14 @@ const defaultConfig = {
   showDate: false,
   alarmTime: null,
   fontFamily: 'Arial, sans-serif',
-  fontSize: 44
+  fontSize: 44,
+  buttonColor: "#2563EB",
+  buttonColorHover: "#1E3A8A"
 }
 
 const storedConfig: ConfigStore | null  = typeof localStorage !== 'undefined'
   ? JSON.parse(localStorage.getItem('clockConfig') || 'null')
   : null;
-
 
 export const configStore = writable<ConfigStore>(storedConfig || defaultConfig);
 

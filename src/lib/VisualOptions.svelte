@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { configStore } from '$stores/configStore';
+  import { configStore, defaultConfig } from '$stores/configStore';
   import ColorSelector from '$lib/ColorSelector.svelte';
 	import { updateConfig } from '$lib/utils/updateStore';
 	import { dateFormats } from '$stores/constants';
@@ -71,6 +71,21 @@
   name="font-color-hover"
   key="fontHoverColor"
   currentColor={$configStore.fontHoverColor}
+/>
+<ColorSelector
+  label="Buttons colors"
+  name="button-color"
+  key="buttonColor"
+  currentColor={$configStore.buttonColor}
+  defaultColor={defaultConfig.buttonColor}
+/>
+<ColorSelector
+  label="Buttons colors on hover"
+  name="button-color-hover"
+  key="buttonColorHover"
+  currentColor={$configStore.buttonColorHover}
+  defaultColor={defaultConfig.buttonColorHover}
+
 />
 
 <ConfigurationWrapper>

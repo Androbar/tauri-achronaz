@@ -13,7 +13,9 @@ export type ConfigStore = {
   clockFormat: ClockFormat
   dateFormat: DateFormat
   showDate: boolean
-  alarmTime: string | null,
+  alarmTime: string | null
   fontFamily: string 
   fontSize: number
+  buttonColor: string
+  buttonColorHover: string
 }
