@@ -12,7 +12,7 @@
   let clockOpen: boolean = false;
   let time: string;
   let formattedDate: string;
-  let alarmTriggered: boolean = true;
+  let alarmTriggered: boolean = false;
   let alarmFormatTime: string;
 
   onMount(() => {

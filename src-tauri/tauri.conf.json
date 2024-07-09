@@ -17,7 +17,12 @@
         "all": true
       },
       "window": {
-        "all":true
+        "setAlwaysOnTop": true,
+        "startDragging": true,
+        "close": true,
+        "setSize": true,
+        "show": true,
+        "hide":true
       }
     },
     "bundle": {
