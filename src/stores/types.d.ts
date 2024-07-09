@@ -18,4 +18,5 @@ export type ConfigStore = {
   fontSize: number
   buttonColor: string
   buttonColorHover: string
+  snoozeDuration: number
 }

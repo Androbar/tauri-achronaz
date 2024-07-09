@@ -12,7 +12,7 @@
   let clockOpen: boolean = false;
   let time: string;
   let formattedDate: string;
-  let alarmTriggered: boolean = false;
+  let alarmTriggered: boolean = true;
   let alarmFormatTime: string;
 
   onMount(() => {
@@ -33,6 +33,14 @@
   const interval = setInterval(updateTime, 1000);
   return () => clearInterval(interval);
 });
+
+const snoozeAlarm = () => {
+  alarmTriggered = false;
+  const snoozeDuration = config?.snoozeDuration || defaultConfig.snoozeDuration;
+  setTimeout(() => {
+    alarmTriggered = true;
+  }, snoozeDuration * 60 * 1000); // Convert snoozeDuration from minutes to milliseconds
+};
 
 </script>
 
@@ -67,11 +75,18 @@
       </div>
     {/if}
     {#if alarmTriggered}
-      <button
-        class="open-configuration btn btn-sm border-transparent hover:border-transparent bg-red-600 hover:bg-red-900"
-        on:click={()=> {alarmTriggered = false}}>
-        <iconify-icon icon="clarity:alarm-off-line" width="22" height="22"></iconify-icon>
-      </button>
+      <div class="flex gap-1">
+        <button
+          class="open-configuration btn btn-sm border-transparent hover:border-transparent bg-red-600 hover:bg-red-900"
+          on:click={()=> {alarmTriggered = false}}>
+          <iconify-icon icon="clarity:alarm-off-line" width="22" height="22"></iconify-icon>
+        </button>
+        <button
+          class="open-configuration btn btn-sm border-transparent hover:border-transparent bg-yellow-600 hover:bg-yellow-900"
+          on:click={snoozeAlarm}>
+          <iconify-icon icon="ic:sharp-snooze" width="22" height="22"></iconify-icon>
+        </button>
+      </div>
     {:else}
       <div class="flex gap-1">
         <button

@@ -16,7 +16,8 @@ export const defaultConfig = {
   fontFamily: 'Arial, sans-serif',
   fontSize: 44,
   buttonColor: "#2563EB",
-  buttonColorHover: "#1E3A8A"
+  buttonColorHover: "#1E3A8A",
+  snoozeDuration: 5
 }
 
 const storedConfig: ConfigStore | null  = typeof localStorage !== 'undefined'
